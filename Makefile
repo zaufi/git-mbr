@@ -46,9 +46,9 @@ _prune_wt:
 # Define a rule to add a working tree for a branch
 define fn.render.fetch
 ../$1/.git:
-	$(cmd.debug.echo.h) git worktree add --force --checkout ../$$(@D) $$(@D) \
-	  && cd ../$$(@D) \
-	  && git checkout $$(@D)
+	$(cmd.debug.echo.h) git worktree add --force --checkout ../$1 $1 \
+	  && cd ../$1 \
+	  && git checkout $1
 endef
 
 # Render rules to add working tree for a branch
