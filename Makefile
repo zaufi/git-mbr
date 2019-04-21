@@ -32,7 +32,7 @@ _help_plugins:
 
 _help_extra_options:
 	@echo 'Extra debugging options:'
-	@echo '  $(_bullet) `debug=1`        show configuration details at start'
+	@echo '  $(_bullet) `debug=1`        show commands instead of run them'
 
 #BEGIN Some "commands" to reuse
 cmd.error = echo "make[$(MAKELEVEL)]: ***"
