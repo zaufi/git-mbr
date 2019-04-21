@@ -92,10 +92,10 @@ else
 endif
 
 show-branches-as-tree:
-	@test -d /tmp/$@ && rm -rf /tmp/$@ || true
-	@mkdir /tmp/$@
-	@cd /tmp/$@ && mkdir -p $(branches.all) && tree --noreport
-	@rm -rf /tmp/$@
+	@rm -rf $${TEMP:-/tmp}/$@
+	@mkdir $${TEMP:-/tmp}/$@
+	@cd $${TEMP:-/tmp}/$@ && mkdir -p $(branches.all) && tree --noreport
+	@rm -rf $${TEMP:-/tmp}/$@
 
 #BEGIN Include "plug-ins"
 -include extras.d/*-plugin.mk
