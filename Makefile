@@ -2,7 +2,7 @@
 # Git helper to manage multiple storage branches.
 # https://github.com/zaufi/git-mbr
 #
-# Copyright (c) 2018-2020 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2018-2023 Alex Turbov <i.zaufi@gmail.com>
 #
 
 SHELL := bash
@@ -47,13 +47,16 @@ fn.unique = $(if $1,$(firstword $1) $(call fn.unique,$(filter-out $(firstword $1
 fn.apply.eval = $(eval $(call $1,$2,$3,$4,$5,$6,$7,$8,$9))
 fn.make.error = $(cmd.error) "$(strip $1)." 1>&2
 fn.make.failure = $(cmd.error) "$(strip $1). Stop." 1>&2 && exit 1
+fn.path.join = $(shell readlink -m $1/$2)
 #END Some "functions" to reuse
 
+git.top = $(shell git rev-parse --show-toplevel)
+branch.self = $(shell git symbolic-ref --short HEAD)
 branches.remote = $(filter-out HEAD,$(shell git branch --remote --list --format='%(refname:strip=3)'))
 branches.local = $(shell git branch --list --format='%(refname:strip=2)')
 branches.all = $(call fn.unique,$(branches.remote) $(branches.local))
 worktrees.all = $(patsubst \
-    refs/heads/%,%,$(shell git worktree list --porcelain | grep ^branch | sed 's,branch ,,' | grep -v $$(git symbolic-ref HEAD)) \
+    refs/heads/%,%,$(shell git worktree list --porcelain | grep ^branch | sed 's,branch ,,' | grep -v $(branch.self)) \
   )
 
 _prune_wt:
@@ -71,12 +74,21 @@ _prune_wt:
 # The rule to update all branches
 update-all: _prune_wt $(branches.all:%=../%/.git)
 
-add-branch:
-ifndef name
+_missed_name_param:
 	@$(call fn.make.error, Please provide the branch name via 'name=<str>' parameter)
-else
+
+_add_branch_via_wt:
 	$(cmd.debug.echo.h) git worktree add --force --checkout -b $(name) ../$(name) $$(git rev-list --max-parents=0 HEAD)
-endif
+
+_add_branch_via_co:
+	$(cmd.debug.echo.h) git checkout --orphan $(name)
+	$(cmd.debug.echo.h) git commit -am 'misc: initial orphan branch fork'
+	$(cmd.debug.echo.h) git checkout $(branch.self)
+	$(cmd.debug.echo.h) git worktree add "$(call fn.path.join,$(git.top),/../$(name))" $(name) \
+	  && $(cmd.debug.echo) cd "$(call fn.path.join,$(git.top),/../$(name))" \
+	  && $(cmd.debug.echo) git submodule update --init
+
+add-branch: $(if $(name), $(if $(or $(o),$(orph),$(orphan)), _add_branch_via_co, _add_branch_via_wt), _missed_name_param)
 
 for-each-working-tree:
 ifndef exec
