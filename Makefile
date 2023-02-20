@@ -53,6 +53,13 @@ fn.apply.eval = $(eval $(call $1,$2,$3,$4,$5,$6,$7,$8,$9))
 fn.make.error = $(cmd.error) "$(strip $1)." 1>&2
 fn.make.failure = $(cmd.error) "$(strip $1). Stop." 1>&2 && exit 1
 fn.path.join = $(shell readlink -m $1/$2)
+fn.worktree.get = $(shell \
+    git worktree list --porcelain \
+      | grep ^$1 \
+      | cut -d ' ' -f 2 \
+      | grep -v '$(branch.self)' \
+      $(if $2,| $2,) \
+  )
 #END Some "functions" to reuse
 
 git.top = $(shell git rev-parse --show-toplevel)
@@ -60,9 +67,7 @@ branch.self = $(shell git symbolic-ref --short HEAD)
 branches.remote = $(filter-out HEAD,$(shell git branch --remote --list --format='%(refname:strip=3)'))
 branches.local = $(shell git branch --list --format='%(refname:strip=2)')
 branches.all = $(call fn.unique,$(branches.remote) $(branches.local))
-worktrees.all = $(patsubst \
-    refs/heads/%,%,$(shell git worktree list --porcelain | grep ^branch | sed 's,branch ,,' | grep -v $(branch.self)) \
-  )
+worktrees.all = $(patsubst refs/heads/%,%,$(call fn.worktree.get,branch))
 
 _prune_wt:
 	$(cmd.debug.echo.h) git worktree prune -v
