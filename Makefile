@@ -30,7 +30,12 @@ _help_main:
 # NOTE Plug-ins' help-screen targets should add self as dependency of this target!
 _help_plugins:
 
+# NOTE This target should be a dependency for a plugin's help screen.
+_help_show_plugin_name:
+	@echo 'Targets from `$(lastword $(MAKEFILE_LIST))` plugin:'
+
 _help_extra_options:
+	@echo ''
 	@echo 'Extra debugging options:'
 	@echo '  $(_bullet) `debug=1`        show commands instead of run them'
 
