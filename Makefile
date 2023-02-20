@@ -39,15 +39,15 @@ _help_extra_options:
 	@echo 'Extra debugging options:'
 	@echo '  $(_bullet) `debug=1`        show commands instead of run them'
 
-#BEGIN Some "commands" to reuse
+# BEGIN Some "commands" to reuse
 cmd.error = echo "make[$(MAKELEVEL)]: ***"
 ifeq '$(debug)' '1'
 cmd.debug.echo = echo
 cmd.debug.echo.h = @echo
 endif
-#END Some "commands" to reuse
+# END Some "commands" to reuse
 
-#BEGIN Some "functions" to reuse
+# BEGIN Some "functions" to reuse
 fn.unique = $(if $1,$(firstword $1) $(call fn.unique,$(filter-out $(firstword $1),$1)))
 fn.apply.eval = $(eval $(call $1,$2,$3,$4,$5,$6,$7,$8,$9))
 fn.make.error = $(cmd.error) "$(strip $1)." 1>&2
@@ -60,7 +60,7 @@ fn.worktree.get = $(shell \
       | grep -v '$(branch.self)' \
       $(if $2,| $2,) \
   )
-#END Some "functions" to reuse
+# END Some "functions" to reuse
 
 git.top = $(shell git rev-parse --show-toplevel)
 branch.self = $(shell git symbolic-ref --short HEAD)
@@ -117,6 +117,6 @@ show-branches-as-tree:
 	@cd $${TEMP:-/tmp}/$@ && mkdir -p $(branches.all) && tree --noreport
 	@rm -rf $${TEMP:-/tmp}/$@
 
-#BEGIN Include "plug-ins"
+# BEGIN Include "plug-ins"
 -include extras.d/*-plugin.mk
-#END Include "plug-ins"
+# END Include "plug-ins"
