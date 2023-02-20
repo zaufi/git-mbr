@@ -25,19 +25,16 @@ _help_main:
 	@echo '    make update-all [sub=1]'
 	@echo '    make for-each-working-tree exec=<cmd> [match=<pattern>]'
 	@echo '    make show-branches-as-tree'
-	@echo ''
 
 # NOTE Plug-ins' help-screen targets should add self as dependency of this target!
 _help_plugins:
-
-# NOTE This target should be a dependency for a plugin's help screen.
-_help_show_plugin_name:
-	@echo 'Targets from `$(lastword $(MAKEFILE_LIST))` plugin:'
 
 _help_extra_options:
 	@echo ''
 	@echo 'Extra debugging options:'
 	@echo '  $(_bullet) `debug=1`        show commands instead of run them'
+
+.PHONY: help _help_main _help_plugins _help_extra_options
 
 # BEGIN Some "commands" to reuse
 cmd.error = echo "make[$(MAKELEVEL)]: ***"
@@ -60,6 +57,15 @@ fn.worktree.get = $(shell \
       | grep -v '$(branch.self)' \
       $(if $2,| $2,) \
   )
+define fn._render.plugin.help.targets =
+$1-title:
+	@echo ''
+	@echo 'Targets from `$(lastword $(MAKEFILE_LIST))` plugin:'
+$1: $1-title
+_help_plugins: $1
+.PHONY: $1 $1-title
+endef
+fn.set.plugin.help.target = $(call fn.apply.eval,fn._render.plugin.help.targets,$1)
 # END Some "functions" to reuse
 
 git.top = $(shell git rev-parse --show-toplevel)
