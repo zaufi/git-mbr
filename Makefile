@@ -54,8 +54,7 @@ _bullet := $(if $(findstring $(OUTPUT),utf utf-8 utf8 UTF UTF-8 UTF8),•,*)
 define fn._render.plugin.help.targets =
 $1-title:
 	@$(cmd.eecho) "\n$(c.bold)$(c.italic)Targets from" \
-	              "$(c.dim)$(c.magenta)\`$(lastword $(MAKEFILE_LIST))\`$(c.normal)$(c.bold)$(c.italic)" \
-	              "plugin:$(c.reset)"
+	              "$(c.dim)$(c.magenta)\`$(lastword $(MAKEFILE_LIST))\`$(c.normal)$(c.bold)$(c.italic):$(c.reset)"
 $1: $1-title
 _help_plugins: $1
 .PHONY: $1 $1-title
