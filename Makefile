@@ -12,8 +12,8 @@ SHELL := bash
 OUTPUT ?= $(shell locale charmap)
 
 # BEGIN Some "commands" to reuse
-cmd.error = echo "make[$(MAKELEVEL)]: ***"
 cmd.eecho = echo -e
+cmd.error = $(cmd.eecho) "$(c.gray)make[$(MAKELEVEL)]: $(c.red)***"
 ifeq '$(debug)' '1'
 cmd.debug.echo = echo
 cmd.debug.echo.h = @echo
@@ -23,8 +23,8 @@ endif
 # BEGIN Some "functions" to reuse
 fn.unique = $(if $1,$(firstword $1) $(call fn.unique,$(filter-out $(firstword $1),$1)))
 fn.apply.eval = $(eval $(call $1,$2,$3,$4,$5,$6,$7,$8,$9))
-fn.make.error = $(cmd.error) "$(strip $1)." 1>&2
-fn.make.failure = $(cmd.error) "$(strip $1). Stop." 1>&2 && exit 1
+fn.make.error = $(cmd.error) "$(strip $1).$(c.reset)" 1>&2
+fn.make.failure = $(cmd.error) "$(strip $1). Stop.$(c.reset)" 1>&2 && exit 1
 fn.path.join = $(shell readlink -m $1/$2)
 fn.worktree.get = $(shell \
     git worktree list --porcelain \
@@ -33,6 +33,7 @@ fn.worktree.get = $(shell \
       | grep -v '$(branch.self)' \
       $(if $2,| $2,) \
   )
+fn.show_title = $(cmd.eecho) "\n$(c.gray)---[ $(c.cyan)$1$(c.gray) ]---$(c.reset)"
 # END Some "functions" to reuse
 
 # BEGIN Terminal colors
@@ -92,6 +93,8 @@ _help_extra_options:
 _prune_wt:
 	$(cmd.debug.echo.h) git worktree prune -v
 
+.PHONY: _prune_wt
+
 # Define a rule to add a working tree for a branch
 ../%/.git:
 	@echo 'Adding a working tree for `$*`'
@@ -125,13 +128,15 @@ ifndef exec
 	@$(call fn.make.error, Please provide a command to execute via 'exec=<cmd>' parameter)
 else
 	@for dir in $(worktrees.all); do \
-	    if [[ $(if $(match),$${dir} =~ $(match), true) ]]; then \
-	        cd ../$${dir}; \
-	        echo -e "\n---[ $${dir} ] ---"; \
-	        ( ( $(exec) ) || true ) && cd - > /dev/null; \
-	    fi; \
+	    $(if $(match),[[ ! $${dir} =~ $(match) ]] && continue || true;,) \
+	    cd ../$${dir} \
+	     && $(call fn.show_title,$${dir}) \
+	     && ( ( $(exec) ) || true ) \
+	     && cd - > /dev/null; \
 	done
 endif
+
+.PHONY: for-each-working-tree
 
 show-branches-as-tree:
 	@rm -rf $${TEMP:-/tmp}/$@
