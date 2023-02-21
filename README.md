@@ -8,7 +8,7 @@ of multiple branches.
 Motivation
 ----------
 
-It is quite common in my experience to have a Git repository where
+It is pretty common in my experience to have a Git repository where
 every branch is dedicated to things that are not related to each other.
 Typically this repo has nothing in the `master` and most files are placed
 in some branch. Examples are:
@@ -36,8 +36,8 @@ I usually clone my repositories with the following command:
 ~ $ git clone github:repo repo/master
 ```
 
-So, the project's root resides in the `repo/master` directory after clone,
-and to work with a branch, I do:
+So, the project's root resides in the `repo/master` directory after cloning,
+and to work with a branch, I do the following:
 
 ```console
 repo/master$ git worktree add --checkout ../feature/cool-stuff feature/cool-stuff
@@ -62,19 +62,7 @@ Usage
 There is nothing to "build" in terms of Make. So, the default target
 prints the help screen:
 
-```console
-demo/master$ make
-Git helper to manage multiple storage branches.
-
-Usage:
-    make add-branch name=<string>
-    make update-all
-    make for-each-working-tree exec=<cmd> [match=<pattern>]
-    make show-branches-as-tree
-
-Extra debugging options:
- • `debug=1`        show commands instead of run
-```
+![Help Screen](help-screen.png)
 
 Examples:
 
