@@ -11,33 +11,9 @@ SHELL := bash
 # NOTE The other value is `utf-8`
 OUTPUT ?= $(shell locale charmap)
 
-_bullet := $(if $(findstring $(OUTPUT),utf utf-8 utf8 UTF UTF-8 UTF8),•,*)
-
-help: _help_main _help_plugins _help_extra_options
-
-.DEFAULT: help
-
-_help_main:
-	@echo 'Git helper to manage multiple storage branches.'
-	@echo ''
-	@echo 'Usage:'
-	@echo '    make add-branch name=<string>'
-	@echo '    make update-all [sub=1]'
-	@echo '    make for-each-working-tree exec=<cmd> [match=<pattern>]'
-	@echo '    make show-branches-as-tree'
-
-# NOTE Plug-ins' help-screen targets should add self as dependency of this target!
-_help_plugins:
-
-_help_extra_options:
-	@echo ''
-	@echo 'Extra debugging options:'
-	@echo '  $(_bullet) `debug=1`        show commands instead of run them'
-
-.PHONY: help _help_main _help_plugins _help_extra_options
-
 # BEGIN Some "commands" to reuse
 cmd.error = echo "make[$(MAKELEVEL)]: ***"
+cmd.eecho = echo -e
 ifeq '$(debug)' '1'
 cmd.debug.echo = echo
 cmd.debug.echo.h = @echo
@@ -57,23 +33,61 @@ fn.worktree.get = $(shell \
       | grep -v '$(branch.self)' \
       $(if $2,| $2,) \
   )
-define fn._render.plugin.help.targets =
-$1-title:
-	@echo ''
-	@echo 'Targets from `$(lastword $(MAKEFILE_LIST))` plugin:'
-$1: $1-title
-_help_plugins: $1
-.PHONY: $1 $1-title
-endef
-fn.set.plugin.help.target = $(call fn.apply.eval,fn._render.plugin.help.targets,$1)
 # END Some "functions" to reuse
 
+# BEGIN Terminal colors
+include extras.d/colors.mk
+# END Terminal colors
+
+# BEGIN VCS variables
 git.top = $(shell git rev-parse --show-toplevel)
 branch.self = $(shell git symbolic-ref --short HEAD)
 branches.remote = $(filter-out HEAD,$(shell git branch --remote --list --format='%(refname:strip=3)'))
 branches.local = $(shell git branch --list --format='%(refname:strip=2)')
 branches.all = $(call fn.unique,$(branches.remote) $(branches.local))
 worktrees.all = $(patsubst refs/heads/%,%,$(call fn.worktree.get,branch))
+# END VCS variables
+
+# BEGIN Help screen
+_bullet := $(if $(findstring $(OUTPUT),utf utf-8 utf8 UTF UTF-8 UTF8),•,*)
+define fn._render.plugin.help.targets =
+$1-title:
+	@$(cmd.eecho) "\n$(c.bold)$(c.italic)Targets from" \
+	              "$(c.dim)$(c.magenta)\`$(lastword $(MAKEFILE_LIST))\`$(c.normal)$(c.bold)$(c.italic)" \
+	              "plugin:$(c.reset)"
+$1: $1-title
+_help_plugins: $1
+.PHONY: $1 $1-title
+endef
+fn.set.plugin.help.target = $(call fn.apply.eval,fn._render.plugin.help.targets,$1)
+
+fn.hlp.ttl = @$(cmd.eecho) "$(c.bold)$(strip $1)$(c.reset)"
+fn.hlp.tgt = @$(cmd.eecho) "$(help.use.indent)$(c.gray)$(strip $1)$(c.reset)$(if $2,$(help.text.indent)$(c.italic)# $(strip $2)$(c.reset),)"
+fn.hlp.opt = @$(cmd.eecho) "$(help.opt.indent)$(_bullet) $(c.gray)$(strip $1)$(c.reset)$(if $2,$(help.text.indent)$(c.italic)# $(strip $2)$(c.reset),)"
+
+help: _help_main _help_plugins _help_extra_options
+
+.DEFAULT: help
+
+_help_main:
+	$(call fn.hlp.ttl, Git helper to manage multiple storage branches.\n)
+	$(call fn.hlp.ttl, Usage:)
+	$(call fn.hlp.tgt, make add-branch name=<string>, add a new branch with a given name)
+	$(call fn.hlp.tgt, make update-all [sub=1], checkout all branches as working trees)
+	$(call fn.hlp.tgt, make for-each-working-tree exec=<cmd>, execute given command for all working trees)
+	$(call fn.hlp.tgt, $(help.use2.indent)[match=<pattern>])
+	$(call fn.hlp.tgt, make show-branches-as-tree, show working trees structure)
+
+# NOTE Plug-ins' help-screen targets should add self as dependency of this target!
+_help_plugins:
+
+_help_extra_options:
+	$(call fn.hlp.ttl, \nExtra debugging options:)
+	$(call fn.hlp.opt, debug=1, show commands instead of run them)
+
+.PHONY: help _help_main _help_plugins _help_extra_options
+.NOTPARALLEL: help _help_plugins
+# END Help screen
 
 _prune_wt:
 	$(cmd.debug.echo.h) git worktree prune -v
@@ -112,7 +126,9 @@ ifndef exec
 else
 	@for dir in $(worktrees.all); do \
 	    if [[ $(if $(match),$${dir} =~ $(match), true) ]]; then \
-	        cd ../$${dir} && echo -e "\n---[ $${dir} ] ---" && ( ( $(exec) ) || true ) && cd - > /dev/null; \
+	        cd ../$${dir}; \
+	        echo -e "\n---[ $${dir} ] ---"; \
+	        ( ( $(exec) ) || true ) && cd - > /dev/null; \
 	    fi; \
 	done
 endif
