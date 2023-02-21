@@ -139,10 +139,14 @@ endif
 .PHONY: for-each-working-tree
 
 show-branches-as-tree:
-	@rm -rf $${TEMP:-/tmp}/$@
-	@mkdir $${TEMP:-/tmp}/$@
-	@cd $${TEMP:-/tmp}/$@ && mkdir -p $(branches.all) && tree --noreport
-	@rm -rf $${TEMP:-/tmp}/$@
+	@rm -rf $${TEMP:-/tmp}/$@ \
+	 && mkdir $${TEMP:-/tmp}/$@ \
+	 && cd $${TEMP:-/tmp}/$@ \
+	 && mkdir -p $(branches.all) \
+	 && tree --noreport \
+	 && rm -rf $${TEMP:-/tmp}/$@
+
+.PHONY: show-branches-as-tree
 
 # BEGIN Include "plug-ins"
 -include extras.d/*-plugin.mk
