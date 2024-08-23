@@ -76,7 +76,7 @@ _help_main:
 	$(call fn.hlp.tgt, make add-branch name=<string>, add a new branch with a given name)
 	$(call fn.hlp.tgt, $(help.use2.indent)[orphan=1 | orph=1 | o=1],  (optionally make the branch orphan))
 	$(call fn.hlp.tgt, make update-all [sub=1], checkout all branches as working trees)
-	$(call fn.hlp.tgt, , (optionally initialize sub-moudules))
+	$(call fn.hlp.tgt, , (optionally initialize sub-modules))
 	$(call fn.hlp.tgt, make for-each-working-tree exec=<cmd>, execute given command for all working trees)
 	$(call fn.hlp.tgt, $(help.use2.indent)[match=<pattern>])
 	$(call fn.hlp.tgt, make show-branches-as-tree, show working trees structure)

@@ -47,12 +47,14 @@ No, I don't use these commands exactly ;-) I have pretty convenient
 [Git aliases configured][1] ;-) As the result, I'll have this in my
 working `repo/` directory:
 
+```console
     repo
     ├── feature
     │   └── cool-stuff
     └── master
+```
 
-For the _configuration-storage-like_ repositories with *a lot* of
+For the *configuration-storage-like* repositories with *a lot* of
 branches, the `master` has this `Makefile` only (and the `README`).
 
 
@@ -67,6 +69,7 @@ prints the help screen:
 Examples:
 
 * Add a new branch:
+
   ```console
   demo/master$ make add-branch name=hardware/laptop/system76-oryp3
   git worktree add --force --checkout -b hardware/laptop/system76-oryp3 \
@@ -74,11 +77,13 @@ Examples:
   Preparing worktree (new branch 'hardware/laptop/system76-oryp3')
   HEAD is now at b07071c Demo
   ```
-  In my experience, all those branches do not need a _common history_, so
+
+  In my experience, all those branches do not need a *common history*, so
   I use the very first commit in the repo as a branch point. That is why
   better not to have many files in the repo at the very first commit ;-)
 
 * Check the result:
+
   ```console
   demo/master$ make show-branches-as-tree
   .
@@ -95,6 +100,7 @@ Examples:
 
 * The `for-each-working-tree` can be used to execute arbitrary commands
   within the working trees:
+
   ```console
   demo/master$ make for-each-working-tree exec='git status'
 
