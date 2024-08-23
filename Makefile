@@ -1,8 +1,8 @@
 #
-# Git helper to manage multiple storage branches.
+# Git helper to manage multiple branches.
 # https://github.com/zaufi/git-mbr
 #
-# Copyright (c) 2018-2023 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2018-2024 Alex Turbov <i.zaufi@gmail.com>
 #
 
 SHELL := bash
@@ -71,7 +71,7 @@ help: _help_main _help_plugins _help_extra_options
 .DEFAULT: help
 
 _help_main:
-	$(call fn.hlp.ttl, Git helper to manage multiple storage branches.\n)
+	$(call fn.hlp.ttl, Git helper to manage multiple branches.\n)
 	$(call fn.hlp.ttl, Usage:)
 	$(call fn.hlp.tgt, make add-branch name=<string>, add a new branch with a given name)
 	$(call fn.hlp.tgt, $(help.use2.indent)[orphan=1 | orph=1 | o=1],  (optionally make the branch orphan))
