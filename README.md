@@ -8,44 +8,38 @@ of multiple branches.
 Motivation
 ----------
 
-It is pretty common in my experience to have a Git repository where
-every branch is dedicated to things that are not related to each other.
-Typically this repo has nothing in the `master` and most files are placed
-in some branch. Examples are:
+It is pretty often, in my experience, to have a Git repository where every branch is dedicated
+to things unrelated to each other. Typically, this repo has nothing in the `master`, and most
+files are placed in some branch. Examples are:
 
-* the repo with Dockerfiles for CI, where each branch is dedicated to a
-  particular OS/distro. I.e., CentOS, Ubuntu, Fedora, etc.;
+* the repo with Dockerfiles for CI, where each branch is dedicated to a particular OS/distro.
+  I.e., CentOS, Ubuntu, Fedora, etc.;
 * the repo with RPM/Deb spec files -- one per (third-party) package;
-* the repo with configuration files for various hosts/hardware --
-  i.e., one per branch;
+* the repo with configuration files for various hosts/hardware -- i.e., one per branch;
 * etc.
 
-As soon as the count of branches increases, it's going to be a pain to
-rule them all -- e.g., to execute the same command in all branches.
-To address that issue, this Makefile has appeared.
+As soon as the count of branches increases, it's going to be a pain to rule them all -- e.g.,
+to execute the same command in all branches. To address that issue, this Makefile has appeared.
 
-Git has a neat feature called a *working tree*. It allows having
-multiple branches checked out in the file system simultaneously.
-I like to name my branches as paths in a filesystem. E.g.
-`release/1.2.3`, `bug/JIRA-123-blah-blah-regression`,
-`feature/cool-stuff`.  Same for the mentioned types of repositories:
-`config/host/ci-agent`, `centos/7`, `ubuntu/18.04`, etc.
+Git has a neat feature called a *working tree*. It allows having multiple branches checked out
+in the file system simultaneously.  I like to name my branches as paths in a filesystem. E.g.,
+`release/1.2.3`, `bug/JIRA-123-blah-blah-regression`, `feature/cool-stuff`.  Same for the
+mentioned types of repositories: `config/host/ci-agent`, `centos/7`, `ubuntu/18.04`, etc.
 I usually clone my repositories with the following command:
 
 ```console
 ~ $ git clone github:repo repo/master
 ```
 
-So, the project's root resides in the `repo/master` directory after cloning,
-and to work with a branch, I do the following:
+So, the project's root resides in the `repo/master` directory after cloning, and to work with
+a branch, I do the following:
 
 ```console
 repo/master$ git worktree add --checkout ../feature/cool-stuff feature/cool-stuff
 ```
 
-No, I don't use these commands exactly ;-) I have pretty convenient
-[Git aliases configured][1] ;-) As the result, I'll have this in my
-working `repo/` directory:
+No, I don't use these commands exactly ;-) I have pretty convenient [Git aliases configured][1]
+;-) As the result, I'll have this in my working `repo/` directory:
 
 ```console
     repo
@@ -54,15 +48,14 @@ working `repo/` directory:
     └── master
 ```
 
-For the *configuration-storage-like* repositories with *a lot* of
-branches, the `master` has this `Makefile` only (and the `README`).
+For the *configuration-storage-like* repositories with *a lot* of branches, the `master` has this
+`Makefile` only (and the `README`).
 
 
 Usage
 -----
 
-There is nothing to "build" in terms of Make. So, the default target
-prints the help screen:
+There is nothing to "build" in terms of Make. So, the default target prints the help screen:
 
 ![Help Screen](help-screen.png)
 
@@ -78,9 +71,9 @@ Examples:
   HEAD is now at b07071c Demo
   ```
 
-  In my experience, all those branches do not need a *common history*, so
-  I use the very first commit in the repo as a branch point. That is why
-  better not to have many files in the repo at the very first commit ;-)
+  In my experience, all those branches do not need a *common history*, so I use the very first
+  commit in the repo as a branch point. That is why better not to have many files in the repo
+  at the very first commit ;-)
 
 * Check the result:
 
@@ -98,8 +91,7 @@ Examples:
   └── master
   ```
 
-* The `for-each-working-tree` can be used to execute arbitrary commands
-  within the working trees:
+* The `for-each-working-tree` can be used to execute arbitrary commands within the working trees:
 
   ```console
   demo/master$ make for-each-working-tree exec='git status'
@@ -117,10 +109,10 @@ Examples:
   nothing to commit, working tree clean
   ```
 
-  One can use `match=<regex>` parameter to perform the command only for
-  sub-set of branches (working trees).
+  One can use `match=<regex>` parameter to perform the command only for sub-set of branches
+  (working trees).
 
-* Finally, as one may guess, the `update-all` target would add work trees
-  for all branches currently missed in the filesystem.
+* Finally, as one may guess, the `update-all` target would add work trees for all branches
+  currently missed in the filesystem.
 
 [1]: https://github.com/zaufi/etc-files/blob/hardware/notebook/System76-OryxPro/gitconfig#L5
