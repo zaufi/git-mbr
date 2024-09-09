@@ -1,14 +1,14 @@
 # Custom attribute to mark ignored sources. Example:
 # third-party sources, IDE files, data files used for unit tests, &etc.
-[attr]noqa whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-tab-in-indent,-indent-with-non-tab
+[attr]noqa              whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-tab-in-indent,-indent-with-non-tab
 
 # Custom attribute to mark microformat files (MD, RST, &etc.)
 # to setup VCS conflict marker to be long enough to be distinctive
 # from possible _header_ markup.
-[attr]doc conflict-marker-size=79
+[attr]doc               conflict-marker-size=79
 
 # Custom attribute to mark Makefiles
-[attr]makefile text=auto whitespace=-tab-in-indent
+[attr]makefile          text=auto whitespace=-tab-in-indent
 
 # Prevent some VCS related service files to be exported
 .codespellrc            export-ignore
