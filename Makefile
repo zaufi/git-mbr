@@ -26,7 +26,7 @@ fn.apply.eval = $(eval $(call $1,$2,$3,$4,$5,$6,$7,$8,$9))
 fn.make.error = $(cmd.error) "$(strip $1).$(c.reset)" 1>&2
 fn.make.failure = $(cmd.error) "$(strip $1). Stop.$(c.reset)" 1>&2 && exit 1
 fn.path.join = $(shell readlink -m $1/$2)
-# editorconfig-checker-disable-next-line
+# editorconfig-checker-disable
 fn.worktree.get = $(shell \
     git worktree list --porcelain \
       | grep ^$1 \
@@ -34,6 +34,7 @@ fn.worktree.get = $(shell \
       | grep -v '$(branch.self)' \
       $(if $2,| $2,) \
   )
+# editorconfig-checker-enable
 fn.show_title = $(cmd.eecho) "\n$(c.gray)---[ $(c.cyan)$1$(c.gray) ]---$(c.reset)"
 # END Some "functions" to reuse
 
