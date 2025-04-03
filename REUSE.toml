@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: CC0-1.0
+#
+# More details about this file: https://reuse.software/spec-3.2/#reusetoml
+#
+
+version = 1
+SPDX-PackageName = "Git helper to manage multiple branches"
+SPDX-PackageSupplier = "Alex Turbov <i.zaufi@gmail.com>"
+SPDX-PackageDownloadLocation = "https://github.com/zaufi/git-mbr"
+
+# REUSE-IgnoreStart
+
+[[annotations]]
+path = "*.json"
+SPDX-License-Identifier = "CC0-1.0"
+SPDX-FileCopyrightText = "Alex Turbov <i.zaufi@gmail.com>"
+
+# REUSE-IgnoreEnd

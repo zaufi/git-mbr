@@ -1,8 +1,12 @@
+<!--
+SPDX-FileCopyrightText: Copyright (C) 2018 - 2025 Alex Turbov <i.zaufi@gmail.com>
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 What is This
 ============
 
-This is a GNU Makefile aimed to work with Git repositories consisting
-of multiple branches.
+This is a GNU Makefile aimed to work with Git repositories consisting of multiple branches.
 
 
 Motivation

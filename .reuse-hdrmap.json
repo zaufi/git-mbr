@@ -1,0 +1,59 @@
+{
+  "templates": [
+    {
+      "patterns": [
+        "*.md"
+      ],
+      "extra_reuse_cli_options": {
+        "style": "html"
+      }
+    },
+    {
+      "patterns": [
+        "*.jinja2",
+        "*.png"
+      ],
+      "extra_reuse_cli_options": {
+        "force_dot_license": true
+      }
+    },
+    {
+      "patterns": [
+        "*"
+      ],
+      "extra_reuse_cli_options": {
+        "style": "python",
+        "template": "hash"
+      }
+    }
+  ],
+  "licenses": [
+    {
+      "ref": "GPL-3.0-or-later",
+      "patterns": [
+        "*/README.md",
+        "*/Makefile",
+        "*.mk"
+      ]
+    },
+    {
+      "ref": "CC0-1.0",
+      "patterns": [
+        "*"
+      ]
+    }
+  ],
+  "copyright_headers": [
+    {
+      "text": "%reuse.name% <%reuse.email%>",
+      "patterns": [
+        "*"
+      ]
+    }
+  ],
+  "extra_reuse_cli_options": {
+    "copyright_prefix": "spdx-string-c",
+    "exclude_year": false,
+    "merge_copyrights": true
+  }
+}

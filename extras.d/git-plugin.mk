@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) 2018 - 2025 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 git-st:
 	$(MAKE) for-each-working-tree exec='git status'
 

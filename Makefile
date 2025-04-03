@@ -1,8 +1,8 @@
+# SPDX-FileCopyrightText: Copyright (C) 2018 - 2025 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Git helper to manage multiple branches.
 # https://github.com/zaufi/git-mbr
-#
-# Copyright (c) 2018-2024 Alex Turbov <i.zaufi@gmail.com>
 #
 
 SHELL := bash
