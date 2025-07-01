@@ -80,7 +80,7 @@ _help_main:
 	$(call fn.hlp.tgt, make update-all [sub=1], checkout all branches as working trees)
 	$(call fn.hlp.tgt, , (optionally initialize sub-modules))
 	$(call fn.hlp.tgt, make for-each-working-tree exec=<cmd>, execute given command for all working trees)
-	$(call fn.hlp.tgt, $(help.use2.indent)[match=<pattern>])
+	$(call fn.hlp.tgt, $(help.use2.indent)[match=<pattern>], that match an optional pattern)
 	$(call fn.hlp.tgt, make show-branches-as-tree, show working trees structure)
 
 # NOTE Plug-ins' help-screen targets should add self as dependency of this target!
